@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const ee = require("@google/earthengine");
+require("dotenv").config();
 
 const privateKey = JSON.parse(fs.readFileSync("KitahackServiceAccount.json", "utf8"));
 const { initializeApp } = require("firebase/app");
@@ -16,7 +17,7 @@ const {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBiHQN91J4t28NkWdj-gWSF41vu_UR4XjA",
+  apiKey: process.env.firebase_API,
   authDomain: "green-reaper.firebaseapp.com",
   projectId: "green-reaper",
   storageBucket: "green-reaper.firebasestorage.app",
