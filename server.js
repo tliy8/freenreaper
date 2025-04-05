@@ -299,7 +299,19 @@ const server = http.createServer(async (req, res) => {
         var elevation = (await fetchElevationDifference(3.2140, 101.6356)).split(" ");
         var elevation_level = parseFloat(elevation[0]);
         var elevation_difference = parseFloat(elevation[1]);
-        res.write("Geospatial data calculation, done.\n")
+        var geosat = { 
+            budget: budget,
+            lst: lst,
+            ndvi: ndvi,
+            rainfall: rainfall,
+            flood_history: flood,
+            wind_speed: wind_speed,
+            wind_direction: wind_direction,
+            solar_radiation: solar_radiation,
+            elevation_level: elevation_level,
+            elevation_difference: elevation_difference
+        };
+        res.write(`${geosat.toString()}\n`);
         var building_description = await generateContent(app, budget, lst, ndvi, rainfall, flood, wind_speed, wind_direction, solar_radiation, elevation_level, elevation_difference);
         
         res.end(building_description);
