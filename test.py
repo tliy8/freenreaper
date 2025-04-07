@@ -7,7 +7,7 @@ import json
 import asyncio
 import re
 import time
-
+import sys
 mutex = asyncio.Lock()
 
 #Fixed template
@@ -94,6 +94,13 @@ shared_resource = 0
 start = time.time()
 
 # 1st input from server.js 
+#input_data = json.load(sys.stdin)
+
+# CONTENT = input_data['building_description']
+# if isinstance(input_data['building_description'], str):
+#     CONTENT = json.loads(input_data['building_description'])
+# else:
+#     CONTENT = input_data['building_description']
 CONTENT = json.loads('''
 {
  "house_description": {
@@ -181,11 +188,10 @@ CONTENT = json.loads('''
  "total_expenditure": "RM 83,600",
  "disclaimer": "The material costs and quantities are estimates and may vary based on market conditions and design specifics. Coordinates are relative to the origin (0,0,0) at Corner 1 of the foundation. All materials mentioned comply with Malaysian Standards."
 }''')
-
 description = CONTENT['house_description']
 materials = CONTENT['materials_list']
 
-
+print("Done read content")
 context_refined = f"""Project Overview:
 - House Type: {description['house_type']}
 - Area: {description['area']}
@@ -297,7 +303,7 @@ Your task is to generate only the sustainability components of the house using d
 async def generate(context, marker):
   pattern = re.compile(r"(```javascript)|(```)")
   credentials, project_id = load_credentials_from_file(
-        r"C:\Users\haoho\Project\MCP\new_mcp\green-reaper.json", 
+        r"C:\Users\agmen\OneDrive\桌面\khack\GreenReaper\green-reaper.json", 
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
   )
   client = genai.Client(

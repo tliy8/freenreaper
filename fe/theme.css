@@ -1,0 +1,87 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    background: conic-gradient(from 153deg at  55% 56%, rgba(11, 11, 11, 0.86) 154.58deg, #414287 263.95deg, #864377 360deg);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px); /* for Safari */
+background-color: rgba(255, 255, 255, 0.1); /* Optional for glassy effect */
+}
+
+.navbar-con {
+    background: rgba(24, 24, 24, 0.80);
+}
+
+.title {
+    font-size:larger;
+    font-style:italic;
+}
+
+.navelement {
+    padding:10px;
+}
+
+.navelement.active {
+    font-weight:bolder;
+}
+
+a.navelement {
+    color:white;
+    text-decoration: none;
+}
+
+.main-con {
+    border-radius: 50px;
+    background: rgba(37, 37, 37, 0.70);
+    box-shadow: 0px 4px 20px 5px rgba(0, 0, 0, 0.25);
+}
+
+.right-con {
+    border-radius: 50px 0 0 50px;
+    background: rgba(249, 249, 249, 0.80);
+
+}
+
+.right-con > div {
+    margin-bottom:30px;
+}
+
+.right-con > div:nth-last-child() {
+    margin-bottom:10px;
+}
+
+.sub-title {
+    font-size:1.2rem;
+    font-weight:bolder;
+}
+
+.sub-description {
+    font-size:0.8rem;
+    font-weight:lighter;
+}
+
+#map{
+    height:98%
+}
+
+.btn-purple {
+    color:white;
+    background-color: #9D00FF;
+    font-weight:bolder;
+}
+
+.green-title {
+    color: #C1FF5C;
+    text-shadow: 0px 10px 4px #000;
+    font-family: "Great Vibes";
+    font-size: 105px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    z-index:10;
+    font-style:italic;
+    position:absolute;
+}
+
+#map2 {
+    height:90%
+}
