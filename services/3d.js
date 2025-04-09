@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
  */
 function ddd(inputData) {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', ['test.py']); // Adjust path if needed
+    const pythonProcess = spawn('python', ['fe/test.py']); // Adjust path if needed
 
     pythonProcess.stdin.write(JSON.stringify(inputData));
     pythonProcess.stdin.end();

@@ -11,7 +11,7 @@ const cors = require('cors');
 const app = express();
 const firebaseApp = initializeApp(firebaseConfig);
 const {runpython} = require ('./services/pythonbridge')
-
+const{ddd}= require('./services/3d')
 const {spawn} = require('child_process');
 const { floorpython } = require("./services/floorbridge");
 const {getEnvironmentalData} = require("./services/fetchdata")
@@ -57,7 +57,6 @@ app.post('/submit', async (req, res) => {
     await authenticate();
     const geosat = await getEnvironmentalData(lat, lon);
     geosat.budget=budget;
-    console.log(geosat);
     const building_description = await generateContent(
       firebaseApp,
       budget,
@@ -71,67 +70,19 @@ app.post('/submit', async (req, res) => {
       geosat.elevation_level,
       geosat.elevation_difference
     );
+    console.log("content done")
     const analysis = await runpython({ building_description, geosat });
-    req.session.building_description = building_description;
+    console.log("Analysis done")
     await floorpython({building_description});
+    console.log("image done")
+    await ddd({building_description})
+    console.log("3d done")
     res.json({analysis})
-  
-    console.log(req.session.building_description)
   } catch (err) {
     console.error("Composite /submit failed:", err);
     res.status(500).json({ error: err.message });
   }
 });
-const fs = require('fs');
-const path = require('path');
-
-app.post('/floor', async (req, res) => {
-  const building_description = req.session.building_description;
-  console.log("Session building_description:", building_description);
-
-  if (!building_description) {
-    return res.status(400).json({ error: 'No building description found. Submit data first.' });
-  }
-
-  try {
-    // Now returns [floorPlanPath, frontViewPath]
-    const [floorPlanPath, frontViewPath] = await floorpython({ building_description });
-
-    const floorPlanBuffer = fs.readFileSync(floorPlanPath);
-    const frontViewBuffer = fs.readFileSync(frontViewPath);
-
-    const floorPlanBase64 = floorPlanBuffer.toString('base64');
-    const frontViewBase64 = frontViewBuffer.toString('base64');
-    console.log("MIME Check — floor plan size:", floorPlanBuffer.length);
-    console.log("MIME Check — front view size:", frontViewBuffer.length);
-
-    res.json({
-      floorPlan: floorPlanBase64,
-      frontView: frontViewBase64
-    });
-  } catch (err) {
-    console.error("Floor plan generation failed:", err);
-    res.status(500).json({ error: err.message || "Internal server error" });
-  }
-});
-
-
-app.post('/ddd',async(req,res)=>{
-  const building_description = req.session.building_description;
-  console.log("Session building_description:", building_description);
-  if (!building_description) {
-    return res.status(400).json({ error: 'No building description found. Submit data first.' });
-  }
-  try{
-    const ddd = await ddd({building_description})
-
-  }catch(error){
-    console.error("#d generate failed:", err);
-    res.status(500).json({ error: err.message });
-  }
-
-  
-})
 
 
 

@@ -20,7 +20,7 @@
         }
     </script>
     <script type="module" src="index.js"></script>
-    <script type="module" src = "threejs.js"></script>
+    <script type="module" src = "secondthree.js"></script>
  
     
     
@@ -100,12 +100,13 @@
 
                 </div>
                 <div class="text-white right-child building-model d-flex flex-column">
-                    <h5>Model</h5>
-                    <div class="d-flex align-items-center justify-content-center" style="flex:1">
-                        <button class="btn btn-purple px-4" id="viewer-btn" data-bs-toggle="modal" data-bs-target="#threejs-modal">View 3d Model</button>
-                    </div>
-                </div>
-                <div class="text-white right-child building-analysis d-flex flex-column w-100">
+                  <h5>Model<div class="ms-3 spinner-border model-spinner text-primary" style="height:1rem;width:1rem"role="status"></div></h5>
+                  <div class="d-flex align-items-center justify-content-center" style="flex:1">
+                      <button class="btn btn-purple px-4" id="viewer-btn" data-bs-toggle="modal" data-bs-target="#threejs-modal">View 3d Model</button>
+                  </div>
+              </div>
+              <div class="text-white right-child building-analysis d-flex flex-column w-100">
+
                     <h5>Analysis and Projections</h5>
                     <div class="d-flex flex-row w-100 align-items-center" style="flex:1">
                         <div class="analysis financial p-3 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#financial-modal" style="background: linear-gradient(144deg, rgba(202, 202, 202, 0.35) -5.78%, rgba(227, 223, 93, 0.42) 37.35%, rgba(185, 207, 215, 0.70) 104.35%);

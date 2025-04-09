@@ -1,5 +1,5 @@
-import os; os.environ['GEMINI_API_KEY1'] = 'AIzaSyA2ni-S8khOmyijeELF6tWeBHgm34pUDes'
-import os; os.environ['GEMINI_API_KEY2'] = 'AIzaSyBL2g_bUWZXDQPFEtxWlljuX6SP9RP-aiY'
+import os; os.environ['GEMINI_API_KEY1'] = 'AIzaSyA2ni-S8khOmyijeELF6tWeBHgm34pUDes' #
+import os; os.environ['GEMINI_API_KEY2'] = 'AIzaSyBiHQN91J4t28NkWdj-gWSF41vu_UR4XjA'#hong
 import base64
 import os
 from google import genai
@@ -7,7 +7,7 @@ from google.genai import types
 import sys
 import json
 
-# Read and process input data
+# Read and process input data 
 input_data = json.load(sys.stdin)
 building_description = input_data['building_description']
 if isinstance(input_data['building_description'], str):
@@ -16,10 +16,8 @@ else:
     building_description = input_data['building_description']
 
 sus_elements = building_description['house_description']['sustainability_features']
-print("Sustainability Features:", sus_elements, file=sys.stderr)
 
-
-room_num = 5
+room_num = building_description['house_description']['house_type']
 
 def save_binary_file(file_name, data):
     with open(file_name, "wb") as f:
@@ -187,10 +185,5 @@ if __name__ == "__main__":
     if floor_plan_image:
         # Pass the generated floor plan image to generate1 automatically
         generate1(floor_plan_image)
-        result = {
-            "floor_plan": floor_plan_image,
-            "front_view": "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/fe/Final/f_view.jpg"
-        }
-        print(json.dumps(result))
     else:
         print("Floor plan generation failed; frontal view cannot be generated.")
