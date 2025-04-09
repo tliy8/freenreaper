@@ -1,20 +1,4 @@
-from google import genai
-from google.genai import types
-from google.auth import load_credentials_from_file
-from google.auth.credentials import Credentials
-import base64
-import json
-import asyncio
-import re
-import time
-import sys
-import json
-mutex = asyncio.Lock()
 
-shared_resource = 0
-start = time.time()
-
-JS_TEMPLATE = '''
 // --- Import & Setup Section ---
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -176,7 +160,201 @@ window.addEventListener('resize', () => {
 });
 
 // --- Initialization ---
-var data = JSON.parse(`replace here`);
+var data = JSON.parse(`
+{
+  "houseData": [
+    {
+      "geometry": { "type": "BoxGeometry", "args": [10, 4, 8] },
+      "material": { "color": "#4A4A4A" },
+      "position": [0, 2, 0]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [7.071, 0.2, 8] },
+      "material": { "color": "#A0522D" },
+      "position": [2.5, 6.5, 0],
+      "rotation": [0, 0, -0.785398]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [7.071, 0.2, 8] },
+      "material": { "color": "#A0522D" },
+      "position": [-2.5, 6.5, 0],
+      "rotation": [0, 0, 0.785398]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [2, 1.5, 0.1] },
+      "material": { "color": "#4A4A4A" },
+      "position": [0, 8.75, 0.75]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.1, 1.5, 1.5] },
+      "material": { "color": "#4A4A4A" },
+      "position": [0.95, 8.75, 0]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.1, 1.5, 1.5] },
+      "material": { "color": "#4A4A4A" },
+      "position": [-0.95, 8.75, 0]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.118, 0.1, 1.5] },
+      "material": { "color": "#A0522D" },
+      "position": [0.5, 9.75, 0],
+      "rotation": [0, 0, -0.463647]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.118, 0.1, 1.5] },
+      "material": { "color": "#A0522D" },
+      "position": [-0.5, 9.75, 0],
+      "rotation": [0, 0, 0.463647]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.6, 0.8, 0.05] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-0.5, 8.75, 0.775]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.6, 0.8, 0.05] },
+      "material": { "color": "#FFFFFF" },
+      "position": [0.5, 8.75, 0.775]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.2, 1.5, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-2.5, 2, 4.05]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.2, 1.5, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [2.5, 2, 4.05]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [6, 0.2, 2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [0, 0.1, 5]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [6, 0.2, 2] },
+      "material": { "color": "#A0522D" },
+      "position": [0, 4, 5]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 3.8, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-2.9, 2.1, 5.9]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 3.8, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [2.9, 2.1, 5.9]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 3.8, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-1.0, 2.1, 5.9]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 3.8, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [1.0, 2.1, 5.9]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [5.8, 0.1, 0.1] },
+       "material": { "color": "#FFFFFF" },
+      "position": [0, 0.35, 5.9]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [5.8, 0.1, 0.1] },
+       "material": { "color": "#FFFFFF" },
+      "position": [0, 0.95, 5.9]
+    },
+    {
+       "geometry": { "type": "BoxGeometry", "args": [2, 0.1, 0.3] },
+       "material": { "color": "#AAAAAA" },
+       "position": [0, 0.05, 6.45]
+    },
+    {
+       "geometry": { "type": "BoxGeometry", "args": [2, 0.1, 0.3] },
+       "material": { "color": "#AAAAAA" },
+       "position": [0, 0.15, 6.15]
+    }
+  ],
+  "sustainabilityFeatures": [
+    {
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.6, 0.05] },
+      "material": { "color": "#1A1A2E" },
+      "position": [1.464, 6.964, 1.025],
+      "rotation": [0, 0, -0.785398]
+    },
+    {
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.6, 0.05] },
+      "material": { "color": "#1A1A2E" },
+      "position": [3.535, 5.964, 1.025],
+       "rotation": [0, 0, -0.785398]
+    },
+     {
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.6, 0.05] },
+      "material": { "color": "#1A1A2E" },
+      "position": [1.464, 6.964, -1.025],
+      "rotation": [0, 0, -0.785398]
+    },
+    {
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.6, 0.05] },
+      "material": { "color": "#1A1A2E" },
+      "position": [3.535, 5.964, -1.025],
+       "rotation": [0, 0, -0.785398]
+    },
+    {
+      "type": "rainwaterTank",
+      "geometry": { "type": "CylinderGeometry", "args": [0.5, 1.5, 32] },
+      "material": { "color": "#808080" },
+      "position": [-4.5, 0.75, -4.5]
+    },
+    {
+      "type": "greywaterSystem",
+      "geometry": { "type": "BoxGeometry", "args": [0.8, 0.6, 0.8] },
+      "material": { "color": "#696969" },
+      "position": [-3.5, 0.3, -4.5]
+    },
+    {
+        "type": "greenWall",
+        "geometry": { "type": "BoxGeometry", "args": [0.1, 3, 4] },
+        "material": { "color": "#228B22" },
+        "position": [5.05, 2, 0]
+    },
+    {
+      "type": "nativeLandscaping",
+      "geometry": { "type": "SphereGeometry", "args": [0.3, 16, 8] },
+      "material": { "color": "#3CB371" },
+      "position": [4, 0.3, 6.5]
+    },
+     {
+      "type": "nativeLandscaping",
+      "geometry": { "type": "SphereGeometry", "args": [0.3, 16, 8] },
+      "material": { "color": "#556B2F" },
+      "position": [-5.5, 0.3, 1]
+    },
+    {
+      "type": "insulation",
+      "position": [0, 2, 0],
+      "material": { "color": "#D3D3D3" }
+    },
+    {
+      "type": "lowEGlassWindows",
+      "position": [0, 2, 4.1],
+      "material": { "color": "#ADD8E6" }
+    },
+    {
+      "type": "shadingOverhangs",
+      "position": [0, 4, 0],
+      "material": { "color": "#A0522D" }
+    }
+  ]
+}
+`);
 
 document.getElementById('threejs-modal').addEventListener('shown.bs.modal', () => {
   const container = document.getElementById('threejs-container');
@@ -212,184 +390,3 @@ camera.position.copy(center.clone().add(new THREE.Vector3(size * 0.6, size * 0.4
 controls.target.copy(center);
 camera.lookAt(center);
 animate();
-'''
-input_data = json.load(sys.stdin)
-building_description = input_data['building_description']
-if isinstance(input_data['building_description'], str):
-    building_description = json.loads(input_data['building_description'])
-else:
-    building_description = input_data['building_description']
-
-description=building_description['house_description']
-# 1st input from server.js 
-
-
-materials = building_description['materials_list']
-
-
-context_refined = f"""Project Overview:
-- House Type: {description['house_type']}
-- Area: {description['area']}
-- Theme: {description['house_theme']}
-- Layout: {description['house_layout']}
-
-Sustainability Features:
-{description['sustainability_features']}
-
-Materials & Brands:
-""" + "\n".join([f"- {m['material_name']}: {m['material_brand']}" for m in materials]) + f"""
-
-Estimated Total Cost: {building_description['total_expenditure']}
-Orientation Strategy: {description['house_orientation']}
-Exterior Design Summary: {description['house_exterior_design']}
-Design Vision: {description['explicit_textual_illustration']}
-"""
-
-
-PROMPT = f'''
-You are a 3D architectural modeling assistant. I am creating a modular 3D model of a classic craftsman-style bungalow using Three.js. Your task is to generate a JSON structure that I can use directly in my scene.
-
-Context :
-{context_refined}
-
-Output only a JSON object in this format:
-{{
- "houseData": [...],
- "sustainabilityFeatures": [...]
-}}
-
----
-
-## HOUSE STRUCTURE
-
-"houseData" must be an array of modular components. Each object must contain:
-
-- "geometry": {{
-  "type": (e.g., "BoxGeometry", "CylinderGeometry"),
-  "args": [width, height, depth] in meters
- }}
-- "material": {{
-  "color": string — hex code for realistic architecture colors
- }}
-- "position": [x, y, z] in meters — aligned to form a realistic, stackable house
-- Optional: "rotation": [x, y, z] in radians, if needed for roof slope
-
-### Architectural Requirements:
-- 10m wide × 4m tall × 8m deep base
-- Gabled roof with two visible slopes
-- Dormer centered on front roof slope with its own mini roof and two vertical windows
-- 2 window sets on the front facade (left and right of door)
-- Covered front porch:
- - Floor slab and roof
- - Railings across front edge
- - 4 equally spaced columns
- - Steps leading to ground
-
-Use **BoxGeometry** for walls, dormer, roof, and porch parts. Use **real-world alignment** to avoid floating parts. Materials:
-- Walls: dark grey (#4A4A4A) or brown (#8B4513)
-- Trim, columns, and railing: white (#FFFFFF)
-- Roof: brown (#A0522D) or dark grey (#555555)
-
----
-
-## SUSTAINABILITY FEATURES
-
-"sustainabilityFeatures" must include green building elements, accurately placed and visually integrated with the home. These must include:
-{description['sustainability_features']}
-
-Each object must include:
-- "type": string name (e.g., "solarPanels", "nativeLandscaping")
-- "position": [x, y, z] in meters
-- "material": {{
-  "color": string — hex code for realistic environmental colors
- }}
-- Optional: "geometry": {{
-  "type": string (e.g., "BoxGeometry", "CylinderGeometry"),
-  "args": array of [w, h, d] in meters
- }}
-- Optional: "rotation": [x, y, z] in radians (e.g., sloped panel)
-
-### Placement Rules:
-- Solar panels should sit on angled roof surfaces
-- Green roof sits on flat roofs (e.g., porch or dormer)
-- Native plants and compost bin on ground only
-- All features should be logically placed with no overlapping or floating
-- Proportions should match real-world scale (e.g., compost bin < 1m³)
-
----
-
-## JSON OUTPUT RULES
-
-- Return valid, parsable JSON
-- No markdown, explanation, or comments
-- Geometry must be usable directly with Three.js and scale = 0.2
-'''
-
-
-
-async def generate(context, pictures):
-  pattern = re.compile(r"(replace here)")
-  pattern2 = re.compile(r"(```json)|(```)")
-  credentials, project_id = load_credentials_from_file(
-        r"C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/green-reaper.json", 
-        scopes=["https://www.googleapis.com/auth/cloud-platform"]
-  )
-  client = genai.Client(
-      credentials=credentials,
-      vertexai=True,
-      project="green-reaper",
-      location="us-central1",
-  )
-
-  print("cooking")
-  model = "gemini-2.5-pro-preview-03-25"
-  contents = [
-    types.Content(
-      role="user",
-      parts=[
-      types.Part(text=context),
-      ] + pictures
-    )
-  ]
-  generate_content_config = types.GenerateContentConfig(
-    temperature = 1,
-    top_p = 1,
-    seed = 0,
-    max_output_tokens = 65535,
-    response_modalities = ["TEXT"],
-    safety_settings = [types.SafetySetting(
-      category="HARM_CATEGORY_HATE_SPEECH",
-      threshold="OFF"
-    ),types.SafetySetting(
-      category="HARM_CATEGORY_DANGEROUS_CONTENT",
-      threshold="OFF"
-    ),types.SafetySetting(
-      category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
-      threshold="OFF"
-    ),types.SafetySetting(
-      category="HARM_CATEGORY_HARASSMENT",
-      threshold="OFF"
-    )],
-  )
-  
-  with open("secondthree.js", "w", encoding="utf-8") as file:
-      text = re.sub(pattern2, "", client.models.generate_content(
-      model=model,
-      contents=contents,
-      config=generate_content_config,
-      ).text)
-      file.write(re.sub(pattern, text, JS_TEMPLATE))
-
-#input picture here
-pictures = []
-with open("fe/Final/f_view.jpg", "rb") as img_file:
-    pictures.append(types.Part.from_bytes(mime_type="image/jpeg", data = base64.b64encode(img_file.read()).decode('utf-8')))
-
-
-asyncio.run(generate(PROMPT,pictures)) 
-
-
-end = time.time()
-print(f"Time taken = {start - end}")
-
-#Output secondthree.js file which will be runned on browser

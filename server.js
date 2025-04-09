@@ -72,9 +72,12 @@ app.post('/submit', async (req, res) => {
     );
     console.log("content done")
     const analysis = await runpython({ building_description, geosat });
+    console.log(analysis)
     console.log("Analysis done")
     await floorpython({building_description});
     console.log("image done")
+    
+
     await ddd({building_description})
     console.log("3d done")
     res.json({analysis})
