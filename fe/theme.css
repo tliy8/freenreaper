@@ -85,3 +85,37 @@ a.navelement {
 #map2 {
     height:90%
 }
+
+.right-child {
+    height:33%;
+}
+
+.analysis {
+    border-radius:20px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    height:80%;
+    margin-right:25px;
+    width:33%
+}
+
+.italic {
+    font-style:italic;
+}
+
+.last-analysis {
+    margin-right:0;
+}
+
+.images-collection img {
+    height:100%;
+    max-height: 100%;
+    border-radius:10px;
+    margin-right:10px;
+}
+#analysisOutput::-webkit-scrollbar {
+    width: 12px;
+  }
+  #analysisOutput::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+  }

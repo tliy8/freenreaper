@@ -1,34 +1,37 @@
-// services/pythonBridge.js
 const { spawn } = require('child_process');
 
-/**
- * Runs the Python script with the provided input.
- * @param {Object} inputData - Contains `building_description` and `geosat`
- * @returns {Promise<string>} - Resolves with the Python script's output
- */
-function floorpython(inputData) {
+function floorpython({ building_description }) {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', ['Final/image_gen.py']); // Adjust path if needed
+    const py = spawn('python', ['fe/Final/image_gen.py']);
 
-    pythonProcess.stdin.write(JSON.stringify(inputData));
-    pythonProcess.stdin.end();
+    let stdout = '';
+    let stderr = '';
 
-    let output = '';
-    let errorOutput = '';
+    py.stdin.write(JSON.stringify({ building_description }));
+    py.stdin.end();
 
-    pythonProcess.stdout.on('data', (data) => {
-      output += data.toString();
+    py.stdout.on('data', (data) => {
+      stdout += data.toString();
     });
 
-    pythonProcess.stderr.on('data', (data) => {
-      errorOutput += data.toString();
+    py.stderr.on('data', (data) => {
+      stderr += data.toString(); // this is where ✅ logs go now
     });
 
-    pythonProcess.on('close', (code) => {
-      if (code !== 0 || errorOutput) {
-        return reject(new Error(`Python error: ${errorOutput}`));
+    py.on('close', (code) => {
+      if (code !== 0) {
+        return reject(new Error(stderr || `Python script exited with code ${code}`));
       }
-      resolve(output.trim());
+      try {
+        // Keep only the last JSON-looking line
+        const lines = stdout.trim().split('\n');
+        const lastJsonLine = lines.reverse().find(line => line.trim().startsWith('{'));
+        const result = JSON.parse(lastJsonLine);
+        resolve([result.floor_plan, result.front_view]);
+      } catch (err) {
+        reject(new Error("Failed to parse Python output: " + err.message));
+      }
+      
     });
   });
 }

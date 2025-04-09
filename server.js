@@ -11,127 +11,128 @@ const cors = require('cors');
 const app = express();
 const firebaseApp = initializeApp(firebaseConfig);
 const {runpython} = require ('./services/pythonbridge')
-app.use(cors());
-app.use(express.json());
+
 const {spawn} = require('child_process');
 const { floorpython } = require("./services/floorbridge");
- 
+const {getEnvironmentalData} = require("./services/fetchdata")
+const tempstorage={};
+app.use(cors({
+  origin: 'http://localhost:5500',  // Use the exact origin of your frontend
+  credentials: true
+}));
+app.use(express.json());
+app.post('/analyze/environment', async (req, res) => {
+  const { location } = req.body;
+  const [lat, lon] = location.split(',').map(Number);
+
+  try {
+    await authenticate();
+    const data = await getEnvironmentalData(lat, lon);
+    res.json(data);
+  } catch (err) {
+    console.error('Env analysis failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+const session = require('express-session');
+
+app.use(session({
+  secret: '1234',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // set to true if using HTTPS
+    httpOnly: true,
+    sameSite:'lax'
+  }
+}));
+
 
 
 app.post('/submit', async (req, res) => {
-  const { residentialType, budget, location,specialRequest } = req.body;
+  const { location, budget } = req.body;
   const [lat, lon] = location.split(',').map(Number);
 
-  console.log("Received data:", {
-    residentialType,
-    budget,
-    location,
-    specialRequest,
-    lat,
-    lon
-  });
   try {
-    const startReqTime = Date.now();
     await authenticate();
-    console.log("Authenticated successfully!");
-    console.log("Earth Engine initialized!");
-  
-    let lst, ndvi, rainfall, flood, windData, elevationData;
-  
-    try {
-      lst = await fetchLST(lat, lon);
-      console.log("LST:", lst);
-    } catch (err) {
-      throw new Error("fetchLST failed: " + err.message);
-    }
-  
-    try {
-      ndvi = await fetchNDVI(lat, lon);
-      console.log("NDVI:", ndvi);
-    } catch (err) {
-      throw new Error("fetchNDVI failed: " + err.message);
-    }
-  
-    try {
-      rainfall = await fetchRainfall(lat, lon);
-      console.log("Rainfall:", rainfall);
-    } catch (err) {
-      throw new Error("fetchRainfall failed: " + err.message);
-    }
-  
-    try {
-      flood = await fetchFloodHistory(lat, lon);
-      console.log("Flood history:", flood);
-    } catch (err) {
-      throw new Error("fetchFloodHistory failed: " + err.message);
-    }
-  
-    try {
-      windData = await fetchWindData_and_Solar(lat, lon);
-      console.log("WindData:", windData);
-    } catch (err) {
-      throw new Error("fetchWindData_and_Solar failed: " + err.message);
-    }
-  
-    try {
-      elevationData = await fetchElevationDifference(lat, lon);
-      console.log("ElevationData:", elevationData);
-    } catch (err) {
-      throw new Error("fetchElevationDifference failed: " + err.message);
-    }
-  
-    const [wind_speed, wind_direction, solar_radiation] = windData.split(' ').map(parseFloat);
-    const [elevation_level, elevation_difference] = elevationData.split(' ').map(parseFloat);
-  
-    let building_description;
-    try {
-      building_description = await generateContent(
-        firebaseApp,
-        budget,
-        lst,
-        ndvi,
-        rainfall,
-        flood,
-        wind_speed,
-        wind_direction,
-        solar_radiation,
-        elevation_level,
-        elevation_difference
-      );
-      console.log("Generated description");
-    } catch (err) {
-      throw new Error("generateContent failed: " + err.message);
-    }
-  
-    const geosat = {
+    const geosat = await getEnvironmentalData(lat, lon);
+    geosat.budget=budget;
+    console.log(geosat);
+    const building_description = await generateContent(
+      firebaseApp,
       budget,
-      lst,
-      ndvi,
-      rainfall,
-      wind_speed,
-      wind_direction,
-      solar_radiation,
-      elevation_level,
-      elevation_difference
-    };
+      geosat.lst,
+      geosat.ndvi,
+      geosat.rainfall,
+      geosat.flood,
+      geosat.wind_speed,
+      geosat.wind_direction,
+      geosat.solar_radiation,
+      geosat.elevation_level,
+      geosat.elevation_difference
+    );
+    const analysis = await runpython({ building_description, geosat });
+    req.session.building_description = building_description;
+    await floorpython({building_description});
+    res.json({analysis})
   
-    res.send({
-      geosat,
-      building_description
-    });
-  
-    console.log("Response sent:", { geosat, building_description });
-    console.log(`Request handling time: ${Date.now() - startReqTime} ms`);
-    const pythonoutput = await runpython({building_description,geosat});
-    console.log("Python result",pythonoutput);
-    const floorresult = await floorpython({building_description});
-    console.log("Floor Result ",floorresult);
-    
-  } catch (error) {
-    console.error("Error in /submit route:", error);
-    res.status(500).send("Error: " + error.message);
-  }  
+    console.log(req.session.building_description)
+  } catch (err) {
+    console.error("Composite /submit failed:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
+const fs = require('fs');
+const path = require('path');
+
+app.post('/floor', async (req, res) => {
+  const building_description = req.session.building_description;
+  console.log("Session building_description:", building_description);
+
+  if (!building_description) {
+    return res.status(400).json({ error: 'No building description found. Submit data first.' });
+  }
+
+  try {
+    // Now returns [floorPlanPath, frontViewPath]
+    const [floorPlanPath, frontViewPath] = await floorpython({ building_description });
+
+    const floorPlanBuffer = fs.readFileSync(floorPlanPath);
+    const frontViewBuffer = fs.readFileSync(frontViewPath);
+
+    const floorPlanBase64 = floorPlanBuffer.toString('base64');
+    const frontViewBase64 = frontViewBuffer.toString('base64');
+    console.log("MIME Check — floor plan size:", floorPlanBuffer.length);
+    console.log("MIME Check — front view size:", frontViewBuffer.length);
+
+    res.json({
+      floorPlan: floorPlanBase64,
+      frontView: frontViewBase64
+    });
+  } catch (err) {
+    console.error("Floor plan generation failed:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
+  }
+});
+
+
+app.post('/ddd',async(req,res)=>{
+  const building_description = req.session.building_description;
+  console.log("Session building_description:", building_description);
+  if (!building_description) {
+    return res.status(400).json({ error: 'No building description found. Submit data first.' });
+  }
+  try{
+    const ddd = await ddd({building_description})
+
+  }catch(error){
+    console.error("#d generate failed:", err);
+    res.status(500).json({ error: err.message });
+  }
+
+  
+})
+
 
 
 const PORT = process.env.PORT || 3000;

@@ -268,13 +268,17 @@ document.getElementById('nextbutton').addEventListener('click', () => {
 
     // Send data to the backend
     try {
-      const response = await axios.post('http://localhost:3000/submit', data);
-      console.log("Response from server:", response.data);
-      alert("Data submitted successfully!");
+      const response = await axios.post('http://localhost:3000/submit', data,{ withCredentials: true });
+      // Save the analysis data returned by the backend
+      sessionStorage.setItem("analysisData", response.data.analysis);
+      // Redirect to 3rd_page.html
+      window.location.href = "3rd_page.html";
+
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("Submission failed.");
     }
+    
   });
 });
 

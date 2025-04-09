@@ -17,9 +17,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "firebase": "^11.6.0",
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
+    "node-cache": "^5.1.2",
     "three": "^0.175.0"
   }
 }

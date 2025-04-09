@@ -1,4 +1,5 @@
-import os; os.environ['GEMINI_API_KEY'] = 'AIzaSyDzCtqbx-JLchi4KzqNJl7BXnudIX5sytk'
+import os; os.environ['GEMINI_API_KEY1'] = 'AIzaSyA2ni-S8khOmyijeELF6tWeBHgm34pUDes'
+import os; os.environ['GEMINI_API_KEY2'] = 'AIzaSyBL2g_bUWZXDQPFEtxWlljuX6SP9RP-aiY'
 import base64
 import os
 from google import genai
@@ -15,7 +16,8 @@ else:
     building_description = input_data['building_description']
 
 sus_elements = building_description['house_description']['sustainability_features']
-print("Sustainability Features:", sus_elements)
+print("Sustainability Features:", sus_elements, file=sys.stderr)
+
 
 room_num = 5
 
@@ -26,12 +28,12 @@ def save_binary_file(file_name, data):
 def generate():
     """Generates a 2D floor plan image and returns the path of the saved image."""
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=os.environ.get("GEMINI_API_KEY1"),
     )
 
     # Upload the layout inspiration image
     files = [
-        client.files.upload(file="C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/Final/plan.jpg"),
+        client.files.upload(file="C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/fe/Final/plan.jpg"),
     ]
     
     model = "gemini-2.0-flash-exp-image-generation"
@@ -90,7 +92,7 @@ Generate a simple 2D architectural floor plan with only the following labeled ro
         response_mime_type="text/plain",
     )
 
-    output_file = "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/Final/2d_fplan.jpg"
+    output_file = "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/fe/Final/2d_fplan.jpg"
     for chunk in client.models.generate_content_stream(
         model=model,
         contents=contents,
@@ -105,7 +107,7 @@ Generate a simple 2D architectural floor plan with only the following labeled ro
             save_binary_file(
                 output_file, chunk.candidates[0].content.parts[0].inline_data.data
             )
-            print(f"✅ File saved to: {output_file} (MIME: {chunk.candidates[0].content.parts[0].inline_data.mime_type})")
+            print(f"✅ File saved to: {output_file} (MIME: {chunk.candidates[0].content.parts[0].inline_data.mime_type})", file=sys.stderr)
             return output_file
         else:
             print(chunk.text)
@@ -114,7 +116,7 @@ Generate a simple 2D architectural floor plan with only the following labeled ro
 def generate1(floor_plan_path):
     """Generates a frontal view elevation image using the previously generated floor plan."""
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=os.environ.get("GEMINI_API_KEY2"),
     )
 
     # Upload the floor plan image generated in the previous step
@@ -162,7 +164,7 @@ Ensure the overall design is visually balanced, harmonious, and realistically fe
         response_mime_type="text/plain",
     )
 
-    output_file = "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/Final/f_view.jpg"
+    output_file = "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/fe/Final/f_view.jpg"
     for chunk in client.models.generate_content_stream(
         model=model,
         contents=contents,
@@ -185,5 +187,10 @@ if __name__ == "__main__":
     if floor_plan_image:
         # Pass the generated floor plan image to generate1 automatically
         generate1(floor_plan_image)
+        result = {
+            "floor_plan": floor_plan_image,
+            "front_view": "C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/fe/Final/f_view.jpg"
+        }
+        print(json.dumps(result))
     else:
         print("Floor plan generation failed; frontal view cannot be generated.")

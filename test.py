@@ -7,15 +7,20 @@ import json
 import asyncio
 import re
 import time
-import sys
+
 mutex = asyncio.Lock()
 
-#Fixed template
+shared_resource = 0
+start = time.time()
+
 JS_TEMPLATE = '''
 // --- Import & Setup Section ---
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#ade7ff');
@@ -25,51 +30,135 @@ const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerH
 camera.position.set(15, 10, 25);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
-document.body.appendChild(renderer.domElement);
+document.getElementById('threejs-container').appendChild(renderer.domElement);
+
 
 const labelRenderer = new CSS2DRenderer();
-labelRenderer.setSize(window.innerWidth, window.innerHeight);
 labelRenderer.domElement.style.position = 'absolute';
 labelRenderer.domElement.style.top = '0px';
-document.body.appendChild(labelRenderer.domElement);
+labelRenderer.domElement.style.pointerEvents = 'none'; // Ensure OrbitControls still work
+document.getElementById('threejs-container').appendChild(labelRenderer.domElement);
+
+const container = document.getElementById('threejs-container');
+const width = container.clientWidth;
+const height = container.clientHeight;
+
+renderer.setSize(width, height);
+labelRenderer.setSize(width, height);
+
+camera.aspect = width / height;
+camera.updateProjectionMatrix();
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
+controls.enableZoom = true;
+controls.enablePan = true;
+controls.screenSpacePanning = true;
 controls.maxPolarAngle = Math.PI / 2.1;
+controls.minDistance = 5;
+controls.maxDistance = 100;
 controls.target.set(0, 2, 0);
 
+// --- Lighting ---
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(-20, 30, 30);
 directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.width = 2048;
-directionalLight.shadow.mapSize.height = 2048;
+directionalLight.shadow.mapSize.set(2048, 2048);
 scene.add(directionalLight);
 
-const scale = 0.2;
+// --- Groups & Scaling ---
+const scale = 1;
+const houseGroup = new THREE.Group();
+const sustainabilityGroup = new THREE.Group();
+scene.add(houseGroup);
+scene.add(sustainabilityGroup);
 
-// --- House Construction Section (Dynamic) ---
-// --- Generate house code here ---
+// --- House Construction Section (Modular) ---
+function generateHouseStructure(houseData = []) {
+  houseGroup.clear();
 
-// --- Sustainability Elements Section (Modular & Dynamic) ---
-// --- Generate Sustainability Elements here ---
+  houseData.forEach(component => {
+    const { geometry, material, position } = component;
+    const { type, args } = geometry;
+
+    const geom = new THREE[type](...args.map(arg => arg * scale)); // scaled geometry
+
+    const mat = new THREE.MeshStandardMaterial({
+      ...material,
+      color: new THREE.Color(material.color)
+    });
+
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    const [x, y, z] = position.map(p => p * scale);
+    mesh.position.set(x, y, z);
+
+    houseGroup.add(mesh);
+  });
+}
+
 
 function addSustainabilityFeatures(features = []) {
-  features.forEach(f => {
-    if (sustainabilityObjects[f.type]) {
-      const obj = sustainabilityObjects[f.type]();
-      obj.position.set(...f.position.map(p => p * scale));
-      scene.add(obj);
+  features.forEach((feature, index) => {
+    const { type, position, geometry, material, rotation } = feature;
+    let mesh;
+
+    try {
+      // Use provided geometry if available
+      if (geometry && geometry.type && geometry.args) {
+        const geom = new THREE[geometry.type](...geometry.args.map(a => a * scale));
+        const mat = new THREE.MeshStandardMaterial({ color: new THREE.Color(material.color) });
+        mesh = new THREE.Mesh(geom, mat);
+      } else {
+        // If no geometry is provided, use a small default box
+        const geom = new THREE.BoxGeometry(0.2 * scale, 0.2 * scale, 0.2 * scale);
+        const mat = new THREE.MeshStandardMaterial({ color: new THREE.Color(material.color) });
+        mesh = new THREE.Mesh(geom, mat);
+      }
+
+      // Apply position
+      const [x, y, z] = position.map(p => p * scale);
+      mesh.position.set(x, y, z);
+
+      // Apply rotation if provided
+      if (rotation && rotation.length === 3) {
+        mesh.rotation.set(...rotation);
+      }
+
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+
+      // --- Create label ---
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'label';
+      labelDiv.textContent = type;
+      labelDiv.style.marginTop = '-1em';
+      labelDiv.style.fontSize = '0.75em';
+      labelDiv.style.padding = '2px 6px';
+      labelDiv.style.background = 'rgba(255,255,255,0.8)';
+      labelDiv.style.borderRadius = '4px';
+
+      const label = new CSS2DObject(labelDiv);
+      label.position.set(0, 0.3 * scale, 0); // offset slightly above mesh
+      mesh.add(label);
+
+      scene.add(mesh);
+    } catch (err) {
+      console.error(`❌ Error rendering sustainability feature #${index} (type: ${type})`, err);
     }
   });
 }
 
-// --- Animation & Resizing ---
+
+
+// --- Animation Loop ---
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
@@ -78,29 +167,53 @@ function animate() {
 }
 
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  renderer.setSize(width, height);
+  labelRenderer.setSize(width, height);
+  
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  labelRenderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// --- Initialization (You Plug Your Data Here) ---
-// generateHouseStructure(houseData);
-// addSustainabilityFeatures([{ type: 'createGreenRoof', position: [10, 32, 40] }]);
+// --- Initialization ---
+var data = JSON.parse(`replace here`);
+
+document.getElementById('threejs-modal').addEventListener('shown.bs.modal', () => {
+  const container = document.getElementById('threejs-container');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  renderer.setSize(width, height);
+  labelRenderer.setSize(width, height);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  console.log(sustainabilityFeatures);
+});
+
+document.getElementById('close-btn').addEventListener('click', () => {
+  controls.reset();
+});
+
+document.getElementById('rotate-btn').addEventListener('click', () => {
+  controls.autoRotate = !controls.autoRotate;
+});
+
+var houseData = data['houseData'];
+var sustainabilityFeatures = data['sustainabilityFeatures'];
+
+
+generateHouseStructure(houseData);
+addSustainabilityFeatures(sustainabilityFeatures);
+const box = new THREE.Box3().setFromObject(scene);
+const size = box.getSize(new THREE.Vector3()).length();
+const center = box.getCenter(new THREE.Vector3());
+
+camera.position.copy(center.clone().add(new THREE.Vector3(size * 0.6, size * 0.4, size * 0.6)));
+controls.target.copy(center);
+camera.lookAt(center);
 animate();
 '''
 
-shared_resource = 0
-start = time.time()
-
 # 1st input from server.js 
-#input_data = json.load(sys.stdin)
-
-# CONTENT = input_data['building_description']
-# if isinstance(input_data['building_description'], str):
-#     CONTENT = json.loads(input_data['building_description'])
-# else:
-#     CONTENT = input_data['building_description']
 CONTENT = json.loads('''
 {
  "house_description": {
@@ -188,10 +301,11 @@ CONTENT = json.loads('''
  "total_expenditure": "RM 83,600",
  "disclaimer": "The material costs and quantities are estimates and may vary based on market conditions and design specifics. Coordinates are relative to the origin (0,0,0) at Corner 1 of the foundation. All materials mentioned comply with Malaysian Standards."
 }''')
+
 description = CONTENT['house_description']
 materials = CONTENT['materials_list']
 
-print("Done read content")
+
 context_refined = f"""Project Overview:
 - House Type: {description['house_type']}
 - Area: {description['area']}
@@ -210,100 +324,93 @@ Exterior Design Summary: {description['house_exterior_design']}
 Design Vision: {description['explicit_textual_illustration']}
 """
 
-PROMPT1 = f'''
-You are a world-class 3D architectural modeling LLM specializing in modular and dimensionally accurate sustainable architecture using pure Three.js ES Modules.
 
-Your task is to generate **only** the full `function createHouseStructure() {{ ... }}` definition. Do not include any imports, explanations, or markdown. This function should represent the entire house structure only, excluding any sustainability features.
+PROMPT = f'''
+You are a 3D architectural modeling assistant. I am creating a modular 3D model of a classic craftsman-style bungalow using Three.js. Your task is to generate a JSON structure that I can use directly in my scene.
 
-🎯 Objectives:
-Focus only on constructing the house structure (walls, roof, balcony, doors, windows, dormer)
-Use modular Three.js functions such as createBox, createRoofPlane, createGableTriangle, and group components logically
-Maintain accurate dimensions and proportions, scaled from real-world feet to Three.js units using scale = 0.2
-Visually align to the reference image — match facade layout, overhangs, dormer position, balcony, and window spacing
-No sustainability features in this phase
-Return only the function createHouseStructure() definition and its contents
-
-📐Context:
+Context :
 {context_refined}
 
-🔁 Scale Conversion:
-All coordinates and sizes use scale = 0.2 (1 ft = 0.2 Three.js units)
-House base: 25 ft x 80 ft → 5 x 16 units
-Ground floor height: 10 ft → 2 units
-Peak height: 25 ft → 5 units from base
+Output only a JSON object in this format:
+{{
+ "houseData": [...],
+ "sustainabilityFeatures": [...]
+}}
 
-📐 Code Requirements:
-- Define function: `function createHouseStructure() {{ ... }}`
-- Use only `MeshStandardMaterial` and `MeshPhysicalMaterial`, no textures
-- Convert all real-world feet to 3D units using `const SCALE = 0.2` (1 ft = 0.2 units)
-- Ensure visual fidelity matches the reference photo (e.g. dormer, low-pitched roof, balcony, gable)
-- Include:
-  - Foundation
-  - Walls (with material distinction)
-  - Roof (low-pitched, with slight overhang)
-  - Balcony and railings
-  - Doors and energy-efficient windows
-  - Dormer if present in the image
-- Place each element in a logically correct position using scaled measurements
-- Group all elements under a parent `THREE.Group()` and return it
-- Clean code with meaningful variable names (e.g. `leftWall`, `roofPlaneRight`)
-- Do not include lighting, camera, or renderer logic in this function
-- Do not include any `markdown` syntax (no ```javascript blocks) important
+---
 
-📦 Expected Output:
-- Return a clean, scoped createHouseStructure() function
-- Organize grouped components: foundation, walls, roof, dormer, balcony, doors/windows
-- No labels, no sustainability components
-- Only return JavaScript (ESM-compatible), no HTML, no markdown
-- Return without ```javascript```, start with code right away
-'''
+## HOUSE STRUCTURE
 
-PROMPT2 = f"""
-You are a precision-focused 3D sustainability modeling expert. Your task is to generate only the sustainability components of the house described below using pure Three.js ES Modules.
+"houseData" must be an array of modular components. Each object must contain:
 
-🎯 Objective:
-Your task is to generate only the sustainability components of the house using dimensionally accurate, procedurally generated JavaScript code with pure Three.js (ES Modules). Each feature must be placed logically, scaled to real-world dimensions (1 ft = 0.2 units), and must not intersect or overlap with the main house structure. The output must consist solely of a scoped function definition named `addSustainabilityFeatures(scene)` containing these elements.
+- "geometry": {{
+  "type": (e.g., "BoxGeometry", "CylinderGeometry"),
+  "args": [width, height, depth] in meters
+ }}
+- "material": {{
+  "color": string — hex code for realistic architecture colors
+ }}
+- "position": [x, y, z] in meters — aligned to form a realistic, stackable house
+- Optional: "rotation": [x, y, z] in radians, if needed for roof slope
 
-🧱 Required Sustainability Elements (based on description + image):
+### Architectural Requirements:
+- 10m wide × 4m tall × 8m deep base
+- Gabled roof with two visible slopes
+- Dormer centered on front roof slope with its own mini roof and two vertical windows
+- 2 window sets on the front facade (left and right of door)
+- Covered front porch:
+ - Floor slab and roof
+ - Railings across front edge
+ - 4 equally spaced columns
+ - Steps leading to ground
+
+Use **BoxGeometry** for walls, dormer, roof, and porch parts. Use **real-world alignment** to avoid floating parts. Materials:
+- Walls: dark grey (#4A4A4A) or brown (#8B4513)
+- Trim, columns, and railing: white (#FFFFFF)
+- Roof: brown (#A0522D) or dark grey (#555555)
+
+---
+
+## SUSTAINABILITY FEATURES
+
+"sustainabilityFeatures" must include green building elements, accurately placed and visually integrated with the home. These must include:
 {description['sustainability_features']}
 
-📐 Context:
-{context_refined}
+Each object must include:
+- "type": string name (e.g., "solarPanels", "nativeLandscaping")
+- "position": [x, y, z] in meters
+- "material": {{
+  "color": string — hex code for realistic environmental colors
+ }}
+- Optional: "geometry": {{
+  "type": string (e.g., "BoxGeometry", "CylinderGeometry"),
+  "args": array of [w, h, d] in meters
+ }}
+- Optional: "rotation": [x, y, z] in radians (e.g., sloped panel)
 
-📏 Coordinate & Dimension Constraints:
-- Use `const scale = 0.2` (1 ft = 0.2 Three.js units)
-- Place features using real-world positions where possible
-- Avoid overlap with house mesh (e.g., roof slope panels must not clip)
-- Place each component in visually logical and distinct areas
+### Placement Rules:
+- Solar panels should sit on angled roof surfaces
+- Green roof sits on flat roofs (e.g., porch or dormer)
+- Native plants and compost bin on ground only
+- All features should be logically placed with no overlapping or floating
+- Proportions should match real-world scale (e.g., compost bin < 1m³)
 
-🏷️ Labeling Instructions:
-- Use only `CSS2DObject` from `three/addons/renderers/CSS2DRenderer.js`
-- Attach labels centered at the **top of each sustainable component**
-- Label text: “Green Roof”, “Solar Panels”, etc.
-- No `TextGeometry` or 3D font labels — HTML only
+---
 
-🧩 Output Requirements:
-- Wrap all components inside a single function `function addSustainabilityFeatures(scene) {{ ... }}`
-- Use reusable functions like `createLabel()`, `createGreenRoofMesh()`, etc., if needed
-- Do not return main house structure or render logic
-- Avoid imports, camera, renderer setup, and unrelated logic
-- Keep code modular, readable, and scoped for merging with a Three.js scene
+## JSON OUTPUT RULES
 
-📦 Output Format:
-- Return only the complete function definition: `function addSustainabilityFeatures(scene) {{ ... }}`
-- No imports, no rendering, no lighting, no global variables
-- No markdown, comments, or extra explanations
-- All features must be logically grouped and added to the `scene`
-- Output must be pure, valid JavaScript (ES Module-compatible)
-- Do not include any `markdown` syntax (no ```javascript blocks) important
-"""
+- Return valid, parsable JSON
+- No markdown, explanation, or comments
+- Geometry must be usable directly with Three.js and scale = 0.2
+'''
 
 
 
-async def generate(context, marker):
-  pattern = re.compile(r"(```javascript)|(```)")
+async def generate(context, pictures):
+  pattern = re.compile(r"(replace here)")
+  pattern2 = re.compile(r"(```json)|(```)")
   credentials, project_id = load_credentials_from_file(
-        r"C:\Users\agmen\OneDrive\桌面\khack\GreenReaper\green-reaper.json", 
+        r"C:/Users/agmen/OneDrive/桌面/khack/GreenReaper/green-reaper.json", 
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
   )
   client = genai.Client(
@@ -313,18 +420,14 @@ async def generate(context, marker):
       location="us-central1",
   )
 
-
-  model = "gemini-2.5-pro-exp-03-25"
+  print("cooking")
+  model = "gemini-2.5-pro-preview-03-25"
   contents = [
     types.Content(
       role="user",
       parts=[
       types.Part(text=context),
-      types.Part.from_uri(
-      file_uri="https://i.pinimg.com/736x/48/ce/e7/48cee72787df28ed8fc4cb291329064b.jpg",
-      mime_type="image/jpeg",
-      ),
-      ]
+      ] + pictures
     )
   ]
   generate_content_config = types.GenerateContentConfig(
@@ -348,93 +451,24 @@ async def generate(context, marker):
     )],
   )
   
-  if marker == "":
-    with open("threejs.js", "w", encoding="utf-8") as file:
-      text = re.sub(pattern, "", client.models.generate_content(
+  with open("secondthree.js", "w", encoding="utf-8") as file:
+      text = re.sub(pattern2, "", client.models.generate_content(
       model=model,
       contents=contents,
       config=generate_content_config,
       ).text)
-      file.write(text)
-  else:
-    response = client.models.generate_content(
-    model=model,
-    contents=contents,
-    config=generate_content_config,
-    )
-    response = response.text if hasattr(response, "text") else str(response)
-    response = re.sub(pattern, "", response)
-    async with mutex:
-      global JS_TEMPLATE
-      JS_TEMPLATE = re.sub(marker, response, JS_TEMPLATE)
-  
-  print(f"{marker} done.")
+      file.write(re.sub(pattern, text, JS_TEMPLATE))
+
+#input picture here
+pictures = []
+with open("Final/f_view.jpg", "rb") as img_file:
+    pictures.append(types.Part.from_bytes(mime_type="image/jpeg", data = base64.b64encode(img_file.read()).decode('utf-8')))
 
 
+asyncio.run(generate(PROMPT,pictures)) 
 
-async def run_all():
-    await asyncio.gather(
-        generate(PROMPT1, "// --- Generate house code here ---"),
-        generate(PROMPT2, "// --- Generate Sustainability Elements here ---")
-    )
-    code = JS_TEMPLATE
-    PROMPT3 = f"""
-      You are a world-class 3D architecture code optimizer and integration expert. Your task is to review, correct, and refine the combined JavaScript Three.js code generated from two prior models:
-
-      - `createHouseStructure()` – handles house geometry (walls, roof, windows, balcony)
-      - `addSustainabilityFeatures(scene)` – places green components like green roof, solar panels, rainwater tank, etc.
-
-      🎯 Objective:
-      Transform the code into a complete, modular, fully working Three.js application in a single browser-executable ES Module. Start with exactly three import lines, include everything from scene setup to animation loop.
-
-      📐 Context Summary:
-      {context_refined}
-
-      📦 Original Combined Code to Integrate:
-      {code}
-
-      ✅ Code Output Must Start With (exactly this block):
-      // --- Import & Setup Section ---
-      import * as THREE from 'three';
-      import {{ OrbitControls }} from 'three/addons/controls/OrbitControls.js';
-      import {{ CSS2DRenderer, CSS2DObject }} from 'three/addons/renderers/CSS2DRenderer.js';
-
-      📦 Output Requirements:
-      - Do NOT include any other import or export statement
-      - Combine `createHouseStructure()` and `addSustainabilityFeatures()` into one file
-      - Automatically call these functions and add results to the scene
-      - Set up scene, camera, OrbitControls, WebGLRenderer, and CSS2DRenderer
-      - Configure ambient light and directional light with shadows
-      - Add window resize handling
-      - Include `animate()` function with `requestAnimationFrame` loop
-
-      🧠 Integration Guidelines:
-      - `scale = 0.2` must be used consistently for all real-world to 3D unit conversion
-      - Group all geometry using `THREE.Group()` for better structure
-      - Place sustainability features logically (no clipping, proper alignment)
-      - Use `CSS2DObject` to add clean, readable labels above each sustainability feature
-      - Labels must float naturally just above the object and not overlap
-      - Camera should show a good view of the full house at load time
-      - Set `renderer.shadowMap.enabled = true` for lighting realism
-
-      🚫 Do NOT Include:
-      - HTML
-      - `export` or `import` beyond the three provided
-      - Markdown code fences like ```javascript
-      - Any placeholder or instructional text
-
-      🎯 Final Output:
-      Return only valid browser-runnable JavaScript (ES module format)
-      Start code immediately after the given import lines
-      Ensure this code is fully functional when run in a browser with `<script type="module">`
-      """
-
-
-    await generate(PROMPT3, "")  # run only after both are done
-
-asyncio.run(run_all())
 
 end = time.time()
 print(f"Time taken = {start - end}")
 
-#Output threejs.js file which will be runned on browser
+#Output secondthree.js file which will be runned on browser
