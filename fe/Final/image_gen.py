@@ -1,4 +1,4 @@
-import os; os.environ['GEMINI_API_KEY1'] = 'AIzaSyAbSLeRvLOi6e-F8XawaTvLcvK3s3xk1k8'
+import os; os.environ['GEMINI_API_KEY1'] = 'AIzaSyBKyen76O3fTmTnQidg42u14z5e_PChfVo'
 import os; os.environ['GEMINI_API_KEY2'] = 'AIzaSyB5oltuq_EXN0Gx_lo6jo8idtA0EtT0nII'
 import os
 from google import genai

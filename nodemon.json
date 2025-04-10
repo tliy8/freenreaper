@@ -1,0 +1,5 @@
+
+{
+    "ignore": ["fe/final/*.jpg", "fe/*.js","*.jpg"]
+  }
+  

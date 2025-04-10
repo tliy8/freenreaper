@@ -9,7 +9,9 @@ import re
 import time
 import sys
 import json
+import os
 mutex = asyncio.Lock()
+fe_path = os.path.join(os.path.dirname(__file__), 'secondthree.js')
 
 shared_resource = 0
 start = time.time()
@@ -372,13 +374,14 @@ async def generate(context, pictures):
     )],
   )
   
-  with open("secondthree.js", "w", encoding="utf-8") as file:
+  with open(fe_path, "w", encoding="utf-8") as file:
       text = re.sub(pattern2, "", client.models.generate_content(
       model=model,
       contents=contents,
       config=generate_content_config,
       ).text)
       file.write(re.sub(pattern, text, JS_TEMPLATE))
+
 
 #input picture here
 pictures = []

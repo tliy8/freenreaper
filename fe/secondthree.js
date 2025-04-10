@@ -164,341 +164,190 @@ var data = JSON.parse(`
 {
   "houseData": [
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [10, 4, 8]
-      },
-      "material": {
-        "color": "#8B4513"
-      },
+      "geometry": { "type": "BoxGeometry", "args": [10, 4, 8] },
+      "material": { "color": "#8B4513" },
       "position": [0, 2, 0]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [11, 0.2, 5.385]
-      },
-      "material": {
-        "color": "#A0522D"
-      },
-      "position": [0, 5, 2],
-      "rotation": [-0.3805, 0, 0]
+      "geometry": { "type": "BoxGeometry", "args": [5.3, 0.3, 8.2] },
+      "material": { "color": "#555555" },
+      "position": [-2.5, 4.95, 0],
+      "rotation": [0, 0, 0.3805]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [11, 0.2, 5.385]
-      },
-      "material": {
-        "color": "#A0522D"
-      },
-      "position": [0, 5, -2],
-      "rotation": [0.3805, 0, 0]
+      "geometry": { "type": "BoxGeometry", "args": [5.3, 0.3, 8.2] },
+      "material": { "color": "#555555" },
+      "position": [2.5, 4.95, 0],
+      "rotation": [0, 0, -0.3805]
     },
     {
-       "geometry": {
-         "type": "BoxGeometry",
-         "args": [2.5, 1.8, 2]
-       },
-       "material": {
-         "color": "#8B4513"
-       },
-       "position": [0, 5.2, 3.3]
-     },
-     {
-       "geometry": {
-         "type": "BoxGeometry",
-         "args": [2.8, 0.15, 1.3]
-       },
-       "material": {
-         "color": "#A0522D"
-       },
-       "position": [0, 6.35, 3.8],
-       "rotation": [-0.463, 0, 0]
-     },
-     {
-       "geometry": {
-         "type": "BoxGeometry",
-         "args": [2.8, 0.15, 1.3]
-       },
-       "material": {
-         "color": "#A0522D"
-       },
-       "position": [0, 6.35, 2.8],
-       "rotation": [0.463, 0, 0]
-     },
-     {
-       "geometry": {
-         "type": "BoxGeometry",
-         "args": [0.7, 0.9, 0.1]
-       },
-       "material": {
-         "color": "#B0E0E6"
-       },
-       "position": [-0.6, 5.6, 4.25]
-     },
-     {
-       "geometry": {
-         "type": "BoxGeometry",
-         "args": [0.7, 0.9, 0.1]
-       },
-       "material": {
-         "color": "#B0E0E6"
-       },
-       "position": [0.6, 5.6, 4.25]
-     },
-    {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [1.8, 1.5, 0.1]
-      },
-      "material": {
-        "color": "#B0E0E6"
-      },
-      "position": [-2.5, 2.5, 4.05]
+      "geometry": { "type": "BoxGeometry", "args": [1.5, 1.2, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-2.5, 1.8, 4.05]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [1.8, 1.5, 0.1]
-      },
-      "material": {
-        "color": "#B0E0E6"
-      },
-      "position": [2.5, 2.5, 4.05]
+      "geometry": { "type": "BoxGeometry", "args": [1.5, 1.2, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [2.5, 1.8, 4.05]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [1.2, 2.2, 0.15]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [0, 1.2, 4.05]
+      "geometry": { "type": "BoxGeometry", "args": [2, 1.5, 1.5] },
+      "material": { "color": "#8B4513" },
+      "position": [2.5, 5.4, 0]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [10, 0.2, 2.5]
-      },
-      "material": {
-        "color": "#C6C0B6"
-      },
-      "position": [0, 0.1, 5.25]
+      "geometry": { "type": "BoxGeometry", "args": [1.1, 0.2, 1.6] },
+      "material": { "color": "#555555" },
+      "position": [1.95, 6.3, 0],
+      "rotation": [0, 0, 0.4636]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [10.5, 0.2, 3]
-      },
-      "material": {
-        "color": "#A0522D"
-      },
-      "position": [0, 3.5, 5.5]
+      "geometry": { "type": "BoxGeometry", "args": [1.1, 0.2, 1.6] },
+      "material": { "color": "#555555" },
+      "position": [3.05, 6.3, 0],
+      "rotation": [0, 0, -0.4636]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.4, 3.3, 0.4]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [-4.5, 1.85, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [8, 0.5, 2.5] },
+      "material": { "color": "#A9A9A9" },
+      "position": [0, 0.25, 5.25]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.4, 3.3, 0.4]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [-1.5, 1.85, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [8.2, 0.2, 2.6] },
+      "material": { "color": "#555555" },
+      "position": [0, 3, 5.25]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.4, 3.3, 0.4]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [1.5, 1.85, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-3.5, 1.75, 6.4]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.4, 3.3, 0.4]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [4.5, 1.85, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-1.17, 1.75, 6.4]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [2.8, 0.2, 0.2]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [-3, 1.2, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [1.17, 1.75, 6.4]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [2.8, 0.2, 0.2]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [0, 1.2, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
+      "material": { "color": "#FFFFFF" },
+      "position": [3.5, 1.75, 6.4]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [2.8, 0.2, 0.2]
-      },
-      "material": {
-        "color": "#FFFFFF"
-      },
-      "position": [3, 1.2, 6.3]
+      "geometry": { "type": "BoxGeometry", "args": [7.0, 0.1, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [0, 1.4, 6.4]
     },
     {
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [2.5, 0.15, 0.4]
-      },
-      "material": {
-        "color": "#C6C0B6"
-      },
-      "position": [0, 0.075, 6.7]
+      "geometry": { "type": "BoxGeometry", "args": [7.0, 0.1, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [0, 0.6, 6.4]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
+      "material": { "color": "#A9A9A9" },
+      "position": [0, 0.415, 6.65]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
+      "material": { "color": "#A9A9A9" },
+      "position": [0, 0.245, 6.95]
+    },
+    {
+      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
+      "material": { "color": "#A9A9A9" },
+      "position": [0, 0.075, 7.25]
     }
   ],
   "sustainabilityFeatures": [
     {
-      "type": "solarPanels",
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [7, 0.1, 3]
-      },
-      "material": {
-        "color": "#333333"
-      },
-      "position": [0, 5.1, 2],
-      "rotation": [-0.3805, 0, 0]
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [1.8, 5.25, -2],
+      "rotation": [0, 0, -0.3805]
+    },
+     {
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [3.2, 4.95, -2],
+      "rotation": [0, 0, -0.3805]
     },
     {
-      "type": "solarPanels",
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [7, 0.1, 3]
-      },
-      "material": {
-        "color": "#333333"
-      },
-      "position": [0, 5.1, -2],
-      "rotation": [0.3805, 0, 0]
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [1.8, 5.25, 0],
+      "rotation": [0, 0, -0.3805]
+    },
+     {
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [3.2, 4.95, 0],
+      "rotation": [0, 0, -0.3805]
     },
     {
-      "type": "rainwaterHarvestingTank",
-      "geometry": {
-        "type": "CylinderGeometry",
-        "args": [0.6, 0.6, 1.8]
-      },
-      "material": {
-        "color": "#AAAAAA"
-      },
-      "position": [-5.8, 0.9, -3]
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [1.8, 5.25, 2],
+      "rotation": [0, 0, -0.3805]
     },
-    {
-      "type": "rainwaterHarvestingPipe",
-      "geometry": {
-        "type": "CylinderGeometry",
-        "args": [0.05, 0.05, 5.5]
-      },
-      "material": {
-        "color": "#BBBBBB"
-      },
-      "position": [-5.5, 3.2, -4.5]
+     {
+      "type": "solarPanel",
+      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
+      "material": { "color": "#1A1A1A" },
+      "position": [3.2, 4.95, 2],
+      "rotation": [0, 0, -0.3805]
     },
     {
       "type": "greenRoof",
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [10, 0.2, 2.5]
-      },
-      "material": {
-        "color": "#556B2F"
-      },
-      "position": [0, 3.6, 5.5]
+      "geometry": { "type": "BoxGeometry", "args": [7.8, 0.2, 2.4] },
+      "material": { "color": "#556B2F" },
+      "position": [0, 3.2, 5.25]
+    },
+    {
+      "type": "rainwaterTank",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.5, 1] },
+      "material": { "color": "#A0A0A0" },
+      "position": [-5.5, 0.75, -3.5]
+    },
+     {
+      "type": "downspout",
+      "geometry": { "type": "BoxGeometry", "args": [0.1, 4.2, 0.1] },
+      "material": { "color": "#D3D3D3" },
+      "position": [-4.95, 2.1, -4.05]
+    },
+    {
+      "type": "verticalGarden",
+      "geometry": { "type": "BoxGeometry", "args": [1.0, 2.5, 0.2] },
+      "material": { "color": "#228B22" },
+      "position": [-4.5, 1.75, 4.1]
     },
     {
       "type": "nativeLandscaping",
-      "geometry": {
-        "type": "CylinderGeometry",
-        "args": [0.3, 0.3, 0.8]
-      },
-      "material": {
-        "color": "#228B22"
-      },
-      "position": [-6, 0.4, 2]
+      "geometry": { "type": "BoxGeometry", "args": [2, 0.2, 4] },
+      "material": { "color": "#6B8E23" },
+      "position": [-6, 0.1, 0]
     },
     {
       "type": "nativeLandscaping",
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.5, 0.6, 0.5]
-      },
-      "material": {
-        "color": "#90EE90"
-      },
-      "position": [6, 0.3, 1]
+      "geometry": { "type": "BoxGeometry", "args": [2, 0.2, 4] },
+      "material": { "color": "#6B8E23" },
+      "position": [6, 0.1, 0]
     },
     {
       "type": "compostBin",
-      "geometry": {
-        "type": "BoxGeometry",
-        "args": [0.8, 1, 0.8]
-      },
-      "material": {
-        "color": "#654321"
-      },
-      "position": [5.5, 0.5, -3.5]
-    },
-    {
-      "type": "passiveCoolingShading",
-      "position": [0,0,0],
-      "material": { "color": "#FFFFFF"},
-      "description": "Achieved through roof overhangs (modeled) and optimal east-west orientation."
-    },
-    {
-      "type": "recycledMaterials",
-       "position": [0,0,0],
-      "material": { "color": "#FFFFFF"},
-      "description": "Use of reclaimed timber cladding (visualized by brown wall material)."
-    },
-    {
-       "type": "highPerformanceInsulation",
-        "position": [0,0,0],
-       "material": { "color": "#FFFFFF"},
-       "description": "Rockwool insulation used within wall and roof cavities (not visually modeled)."
-     },
-     {
-       "type": "lowVOCFinishes",
-        "position": [0,0,0],
-       "material": { "color": "#FFFFFF"},
-       "description": "Low-VOC paints and finishes used throughout interior (not visually modeled)."
-     },
-     {
-       "type": "energyEfficientAppliances",
-        "position": [0,0,0],
-       "material": { "color": "#FFFFFF"},
-       "description": "Specified within the building design (not visually modeled)."
-     }
+      "geometry": { "type": "BoxGeometry", "args": [0.8, 0.8, 0.8] },
+      "material": { "color": "#654321" },
+      "position": [-6, 0.4, 3]
+    }
   ]
 }
 `);

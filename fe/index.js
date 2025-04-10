@@ -268,11 +268,25 @@ document.getElementById('nextbutton').addEventListener('click', () => {
 
     // Send data to the backend
     try {
-      const response = await axios.post('http://localhost:3000/submit', data,{ withCredentials: true });
-      // Save the analysis data returned by the backend
-      sessionStorage.setItem("analysisData", response.data.analysis);
+      const response = await axios.post('http://localhost:3000/submit', data, { withCredentials: true });
+// Save the analysis data returned by the backend
+sessionStorage.setItem("analysisData", response.data.analysis);
+window.location.href = "3rd_page.html";
+// If your /submit endpoint returns the generated building description
+if (response.data.building_description) {
+  const buildingDesc = response.data.building_description;
+  sessionStorage.setItem("buildingDescription", buildingDesc);
+
+  // Package both building description and analysis into one payload
+  const payload = {
+    building_description: buildingDesc,
+  };
+
+  // Call your /gimg API with both values
+  await axios.post('http://localhost:3000/gimg', payload);
+      }
       // Redirect to 3rd_page.html
-      window.location.href = "3rd_page.html";
+      
 
     } catch (error) {
       console.error("Error submitting data:", error);

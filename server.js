@@ -50,6 +50,7 @@ app.use(session({
 
 
 app.post('/submit', async (req, res) => {
+
   const { location, budget } = req.body;
   const [lat, lon] = location.split(',').map(Number);
 
@@ -74,19 +75,33 @@ app.post('/submit', async (req, res) => {
     const analysis = await runpython({ building_description, geosat });
     console.log(analysis)
     console.log("Analysis done")
-    await floorpython({building_description});
-    console.log("image done")
-    
-
-    await ddd({building_description})
-    console.log("3d done")
-    res.json({analysis})
+    res.json({analysis,building_description})
   } catch (err) {
     console.error("Composite /submit failed:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+app.post('/gimg', async (req, res) => {
+  // Extract both the building description and analysis from the body
+  const { building_description } = req.body;
+  console.log('starting image generation')
+  if (!building_description) {
+    return res.status(400).json({ error: 'Missing required data.' });
+  }
+  try {
+    // Now you have both pieces of data, and you can pass them to your floorpython function
+    await floorpython({ building_description});
+    // Assume further processing is done here
+    console.log('starting 3d generation')
+    await ddd ({building_description});
+    console.log('3d generation complete')
+    res.json({ message: 'floorpython executed successfully with analysis and building_description.' });
+  } catch (err) {
+    console.error('Error running floorpython:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 const PORT = process.env.PORT || 3000;
