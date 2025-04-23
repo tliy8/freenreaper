@@ -37,8 +37,6 @@ async def generate(context):
       project="green-reaper",
       location="us-central1",
   )
-
-
   model = "gemini-2.5-pro-exp-03-25"
   contents = [
     types.Content(
@@ -461,5 +459,3 @@ async def run_all():
 
 
 asyncio.run(run_all())
-
-#Output list with size 3, finance, sustainability, and durability

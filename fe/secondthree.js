@@ -164,190 +164,217 @@ var data = JSON.parse(`
 {
   "houseData": [
     {
+      "id": "baseWall",
       "geometry": { "type": "BoxGeometry", "args": [10, 4, 8] },
       "material": { "color": "#8B4513" },
       "position": [0, 2, 0]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [5.3, 0.3, 8.2] },
-      "material": { "color": "#555555" },
-      "position": [-2.5, 4.95, 0],
-      "rotation": [0, 0, 0.3805]
+      "id": "roofPlaneFront",
+      "geometry": { "type": "BoxGeometry", "args": [5.385, 0.2, 8] },
+      "material": { "color": "#A0522D" },
+      "position": [-2.5, 5, 0],
+      "rotation": [0, 0, 0.38]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [5.3, 0.3, 8.2] },
-      "material": { "color": "#555555" },
-      "position": [2.5, 4.95, 0],
-      "rotation": [0, 0, -0.3805]
+      "id": "roofPlaneBack",
+      "geometry": { "type": "BoxGeometry", "args": [5.385, 0.2, 8] },
+      "material": { "color": "#A0522D" },
+      "position": [2.5, 5, 0],
+      "rotation": [0, 0, -0.38]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [1.5, 1.2, 0.1] },
+      "id": "porchFloor",
+      "geometry": { "type": "BoxGeometry", "args": [10, 0.2, 2] },
+      "material": { "color": "#D2B48C" },
+      "position": [0, 0.1, 5]
+    },
+    {
+      "id": "porchRoof",
+      "geometry": { "type": "BoxGeometry", "args": [10.4, 0.2, 2.4] },
+      "material": { "color": "#A0522D" },
+      "position": [0, 3, 5]
+    },
+    {
+      "id": "porchColumn1",
+      "geometry": { "type": "BoxGeometry", "args": [0.3, 2.8, 0.3] },
       "material": { "color": "#FFFFFF" },
-      "position": [-2.5, 1.8, 4.05]
+      "position": [-4.5, 1.5, 5.85]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [1.5, 1.2, 0.1] },
+      "id": "porchColumn2",
+      "geometry": { "type": "BoxGeometry", "args": [0.3, 2.8, 0.3] },
       "material": { "color": "#FFFFFF" },
-      "position": [2.5, 1.8, 4.05]
+      "position": [-1.5, 1.5, 5.85]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [2, 1.5, 1.5] },
+      "id": "porchColumn3",
+      "geometry": { "type": "BoxGeometry", "args": [0.3, 2.8, 0.3] },
+      "material": { "color": "#FFFFFF" },
+      "position": [1.5, 1.5, 5.85]
+    },
+    {
+      "id": "porchColumn4",
+      "geometry": { "type": "BoxGeometry", "args": [0.3, 2.8, 0.3] },
+      "material": { "color": "#FFFFFF" },
+      "position": [4.5, 1.5, 5.85]
+    },
+    {
+      "id": "porchRailFront1",
+      "geometry": { "type": "BoxGeometry", "args": [2.8, 1.0, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [-3, 0.7, 6.0]
+    },
+    {
+      "id": "porchRailFront2",
+      "geometry": { "type": "BoxGeometry", "args": [2.8, 1.0, 0.1] },
+      "material": { "color": "#FFFFFF" },
+      "position": [0, 0.7, 6.0]
+    },
+    {
+       "id": "porchRailFront3",
+       "geometry": { "type": "BoxGeometry", "args": [2.8, 1.0, 0.1] },
+       "material": { "color": "#FFFFFF" },
+       "position": [3, 0.7, 6.0]
+    },
+    {
+       "id": "porchRailSideL",
+       "geometry": { "type": "BoxGeometry", "args": [0.1, 1.0, 1.85] },
+       "material": { "color": "#FFFFFF" },
+       "position": [-4.7, 0.7, 4.925]
+    },
+    {
+       "id": "porchRailSideR",
+       "geometry": { "type": "BoxGeometry", "args": [0.1, 1.0, 1.85] },
+       "material": { "color": "#FFFFFF" },
+       "position": [4.7, 0.7, 4.925]
+    },
+    {
+      "id": "porchStep",
+      "geometry": { "type": "BoxGeometry", "args": [2.5, 0.1, 0.4] },
+      "material": { "color": "#A05A2C" },
+      "position": [0, 0.05, 6.2]
+    },
+     {
+      "id": "frontDoor",
+      "geometry": { "type": "BoxGeometry", "args": [1.2, 2.2, 0.1] },
+      "material": { "color": "#654321" },
+      "position": [0, 1.1, 4.05]
+    },
+    {
+      "id": "frontWindowL",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.5, 0.1] },
+      "material": { "color": "#ADD8E6" },
+      "position": [-2.5, 2, 4.05]
+    },
+    {
+      "id": "frontWindowR",
+      "geometry": { "type": "BoxGeometry", "args": [1, 1.5, 0.1] },
+      "material": { "color": "#ADD8E6" },
+      "position": [2.5, 2, 4.05]
+    },
+    {
+      "id": "dormerBase",
+      "geometry": { "type": "BoxGeometry", "args": [3, 1.5, 2] },
       "material": { "color": "#8B4513" },
-      "position": [2.5, 5.4, 0]
+      "position": [0, 5.25, 1]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [1.1, 0.2, 1.6] },
-      "material": { "color": "#555555" },
-      "position": [1.95, 6.3, 0],
-      "rotation": [0, 0, 0.4636]
+      "id": "dormerRoof1",
+      "geometry": { "type": "BoxGeometry", "args": [1.58, 0.15, 2] },
+      "material": { "color": "#A0522D" },
+      "position": [-0.75, 6.075, 1],
+      "rotation": [0, 0, 0.32]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [1.1, 0.2, 1.6] },
-      "material": { "color": "#555555" },
-      "position": [3.05, 6.3, 0],
-      "rotation": [0, 0, -0.4636]
+      "id": "dormerRoof2",
+      "geometry": { "type": "BoxGeometry", "args": [1.58, 0.15, 2] },
+      "material": { "color": "#A0522D" },
+      "position": [0.75, 6.075, 1],
+      "rotation": [0, 0, -0.32]
+    },
+     {
+       "id": "dormerWindow1",
+      "geometry": { "type": "BoxGeometry", "args": [0.6, 1.0, 0.1] },
+      "material": { "color": "#ADD8E6" },
+      "position": [-0.7, 5.25, 2.05]
     },
     {
-      "geometry": { "type": "BoxGeometry", "args": [8, 0.5, 2.5] },
-      "material": { "color": "#A9A9A9" },
-      "position": [0, 0.25, 5.25]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [8.2, 0.2, 2.6] },
-      "material": { "color": "#555555" },
-      "position": [0, 3, 5.25]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
-      "material": { "color": "#FFFFFF" },
-      "position": [-3.5, 1.75, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
-      "material": { "color": "#FFFFFF" },
-      "position": [-1.17, 1.75, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
-      "material": { "color": "#FFFFFF" },
-      "position": [1.17, 1.75, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [0.2, 2.5, 0.2] },
-      "material": { "color": "#FFFFFF" },
-      "position": [3.5, 1.75, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [7.0, 0.1, 0.1] },
-      "material": { "color": "#FFFFFF" },
-      "position": [0, 1.4, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [7.0, 0.1, 0.1] },
-      "material": { "color": "#FFFFFF" },
-      "position": [0, 0.6, 6.4]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
-      "material": { "color": "#A9A9A9" },
-      "position": [0, 0.415, 6.65]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
-      "material": { "color": "#A9A9A9" },
-      "position": [0, 0.245, 6.95]
-    },
-    {
-      "geometry": { "type": "BoxGeometry", "args": [1.5, 0.17, 0.3] },
-      "material": { "color": "#A9A9A9" },
-      "position": [0, 0.075, 7.25]
+       "id": "dormerWindow2",
+      "geometry": { "type": "BoxGeometry", "args": [0.6, 1.0, 0.1] },
+      "material": { "color": "#ADD8E6" },
+      "position": [0.7, 5.25, 2.05]
     }
   ],
   "sustainabilityFeatures": [
     {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [1.8, 5.25, -2],
-      "rotation": [0, 0, -0.3805]
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [3, 0.1, 5] },
+      "material": { "color": "#111133" },
+      "position": [-2.5, 5.15, 0],
+      "rotation": [0, 0, 0.38]
+    },
+    {
+      "type": "solarPanels",
+      "geometry": { "type": "BoxGeometry", "args": [3, 0.1, 5] },
+      "material": { "color": "#111133" },
+      "position": [2.5, 5.15, 0],
+      "rotation": [0, 0, -0.38]
+    },
+    {
+      "type": "rainwaterHarvesting",
+      "geometry": { "type": "CylinderGeometry", "args": [0.75, 0.75, 2] },
+       "material": { "color": "#888888" },
+      "position": [-6, 1, 0]
     },
      {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [3.2, 4.95, -2],
-      "rotation": [0, 0, -0.3805]
+      "type": "lowEWindows",
+      "material": { "color": "#ADD8E6" },
+      "position": [0, 2, 4.1],
+      "note": "Represented by window color. Low-E property is non-visual."
     },
     {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [1.8, 5.25, 0],
-      "rotation": [0, 0, -0.3805]
+     "type": "highPerformanceInsulation",
+     "material": { "color": "#FFFFE0" },
+     "position": [0, 2, 0],
+     "note": "Internal feature, not visualized externally."
+    },
+    {
+      "type": "energyEfficientLighting",
+      "material": { "color": "#FFFFFF" },
+      "position": [0, 2.5, 0],
+      "note": "Internal feature (LED), not visualized externally."
     },
      {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [3.2, 4.95, 0],
-      "rotation": [0, 0, -0.3805]
-    },
-    {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [1.8, 5.25, 2],
-      "rotation": [0, 0, -0.3805]
-    },
-     {
-      "type": "solarPanel",
-      "geometry": { "type": "BoxGeometry", "args": [1.6, 0.05, 1.0] },
-      "material": { "color": "#1A1A1A" },
-      "position": [3.2, 4.95, 2],
-      "rotation": [0, 0, -0.3805]
-    },
-    {
-      "type": "greenRoof",
-      "geometry": { "type": "BoxGeometry", "args": [7.8, 0.2, 2.4] },
-      "material": { "color": "#556B2F" },
-      "position": [0, 3.2, 5.25]
-    },
-    {
-      "type": "rainwaterTank",
-      "geometry": { "type": "BoxGeometry", "args": [1, 1.5, 1] },
-      "material": { "color": "#A0A0A0" },
-      "position": [-5.5, 0.75, -3.5]
-    },
-     {
-      "type": "downspout",
-      "geometry": { "type": "BoxGeometry", "args": [0.1, 4.2, 0.1] },
-      "material": { "color": "#D3D3D3" },
-      "position": [-4.95, 2.1, -4.05]
-    },
-    {
-      "type": "verticalGarden",
-      "geometry": { "type": "BoxGeometry", "args": [1.0, 2.5, 0.2] },
-      "material": { "color": "#228B22" },
-      "position": [-4.5, 1.75, 4.1]
+      "type": "recycledConstructionMaterials",
+       "material": { "color": "#BEBEBE" },
+      "position": [0, 0, 0],
+      "note": "Material choice, not visualized as a distinct object."
     },
     {
       "type": "nativeLandscaping",
-      "geometry": { "type": "BoxGeometry", "args": [2, 0.2, 4] },
-      "material": { "color": "#6B8E23" },
-      "position": [-6, 0.1, 0]
+      "geometry": { "type": "BoxGeometry", "args": [0.5, 0.5, 0.5] },
+       "material": { "color": "#228B22" },
+      "position": [-5.5, 0.25, 5]
     },
     {
       "type": "nativeLandscaping",
-      "geometry": { "type": "BoxGeometry", "args": [2, 0.2, 4] },
-      "material": { "color": "#6B8E23" },
-      "position": [6, 0.1, 0]
+      "geometry": { "type": "BoxGeometry", "args": [0.6, 0.7, 0.6] },
+       "material": { "color": "#2E8B57" },
+      "position": [5.5, 0.35, 5]
     },
     {
-      "type": "compostBin",
-      "geometry": { "type": "BoxGeometry", "args": [0.8, 0.8, 0.8] },
-      "material": { "color": "#654321" },
-      "position": [-6, 0.4, 3]
-    }
+       "type": "greenRoof",
+       "geometry": { "type": "BoxGeometry", "args": [10, 0.1, 2] },
+       "material": { "color": "#556B2F" },
+       "position": [0, 3.15, 5]
+     },
+     {
+       "type": "compostBin",
+       "geometry": { "type": "BoxGeometry", "args": [0.8, 0.8, 0.8] },
+       "material": { "color": "#3A3A3A" },
+       "position": [6, 0.4, -2]
+     }
   ]
 }
 `);
